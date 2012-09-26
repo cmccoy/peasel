@@ -97,9 +97,9 @@ cdef ceasel.ESL_SQFILE* open_sequence_file(bytes path, int sq_format=SQFILE_UNKN
     cdef int status
     status = ceasel.esl_sqfile_Open(path, 1, NULL, &sq_fp)
     if status == eslENOTFOUND:
-        raise IOError("Not found: %s" % path)
+        raise IOError("Not found: {0}".format(path))
     elif status != eslOK:
-        raise IOError("Failed to create: %d" % status)
+        raise IOError("Failed to create: {0}".format(status))
     return sq_fp
 
 cdef int _open_ssi(ESL_SQFILE* sqfp) except -1:
@@ -112,7 +112,7 @@ cdef int _open_ssi(ESL_SQFILE* sqfp) except -1:
     if status == eslERANGE:
         raise IOError("Incorrect format (64-bit)!")
     elif status != eslOK:
-        raise IOError("Failed to create: %d" % status)
+        raise IOError("Failed to create: {0}".format(status))
     return 0
 
 cdef ceasel.ESL_SQ* read_sequence(ESL_SQFILE *sq_fp) except NULL:
@@ -170,7 +170,7 @@ def open_ssi(bytes file_path, int sq_format=SQFILE_UNKNOWN):
     _open_ssi(obj._sq_fp)
 
     if obj._sq_fp.data.ascii.ssi is NULL:
-        raise IOError("no index exists for %s" % file_path)
+        raise IOError("no index exists for {0}".format(file_path))
 
     return obj
 
@@ -191,18 +191,18 @@ def create_ssi(bytes file_path, bytes ssi_name=None, int sq_format=SQFILE_UNKNOW
     status = esl_newssi_Open(ssi_name, 0, &ssi);
 
     if status == eslENOTFOUND:
-        raise IOError("Not found: %s" % ssi_name)
+        raise IOError("Not found: {0}".format(ssi_name))
     elif status == eslEOVERWRITE:
-        raise IOError("Exists: %s" % ssi_name)
+        raise IOError("Exists: {0}".format(ssi_name))
     elif status != eslOK:
-        raise IOError("Failed to create: %d" % status)
+        raise IOError("Failed to create: {0}".format(status))
 
     status = esl_sqfile_Open(file_path, 1, NULL, &sq_fp)
     if status != eslOK:
-        raise IOError("Error opening %s: %d", file_path, status)
+        raise IOError("Error opening {0}: {1}".format(file_path, status))
 
     if esl_newssi_AddFile(ssi, sq_fp.filename, sq_fp.format, &fh) != eslOK:
-        raise IOError("Failed to add sequence file %s", file_path)
+        raise IOError("Failed to add sequence file {0}".format(file_path))
 
     try:
         status = ceasel.esl_sqio_ReadInfo(sq_fp, sq)
@@ -215,7 +215,8 @@ def create_ssi(bytes file_path, bytes ssi_name=None, int sq_format=SQFILE_UNKNOW
         if status == eslEFORMAT:
             raise IOError("Failed parsing.")
         elif status != eslEOF:
-            raise IOError("Unexpected error %d reading sequence file" % status)
+            raise IOError(
+                    "Unexpected error {0} reading sequence file".format(status))
 
         esl_newssi_Write(ssi)
     finally:
@@ -229,7 +230,7 @@ def write_fasta(sequences not None, file fp not None):
     """
     Writes `sequences` to the open file handle fp
     """
-    count = 0
+    cdef int count
     for sequence in sequences:
         count += 1
         sequence.write(fp)
