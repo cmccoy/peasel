@@ -81,3 +81,12 @@ class EaselSequenceTestCase(unittest.TestCase):
         self.sequence.reverse_complement()
         self.assertEqual('ACGGT', self.sequence.seq)
 
+def suite():
+    s = unittest.TestSuite()
+    test_classes = [CreateSSITestCase, EaselSequenceTestCase,
+            EaselSequenceIndexTestCase]
+
+    for cls in test_classes:
+        s.addTests(unittest.makeSuite(cls))
+
+    return s
