@@ -18,14 +18,14 @@ easel_c_src.sort()
 
 if has_cython:
     extra = dict(ext_modules=[
-        Extension("peasel.ceasel", ["peasel/easel.pyx"] + easel_c_src,
+        Extension("peasel.ceasel", ["peasel/ceasel.pyx"] + easel_c_src,
             include_dirs=['easel-src', 'peasel'],
             extra_compile_args=compile_args,
             language="c",),
         ], cmdclass={'build_ext': build_ext})
 else:
     extra = dict(ext_modules=[
-        Extension("peasel.ceasel", ["peasel/easel.c"] + easel_c_src,
+        Extension("peasel.ceasel", ["peasel/ceasel.c"] + easel_c_src,
             include_dirs=['easel-src', 'peasel'],
             extra_compile_args=compile_args,
             language="c",),

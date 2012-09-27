@@ -46,7 +46,7 @@ class EaselSequenceIndexTestCase(SequenceFileMixIn, unittest.TestCase):
         self.assertTrue(seq1 is not None)
         self.assertEqual(5, len(seq1))
         self.assertEqual('sequence1', seq1.name)
-        self.assertEqual('d1', seq1.desc)
+        self.assertEqual('d1', seq1.description)
         self.assertEqual('ACCGT', seq1.seq)
 
         seq2 = index['sequence2']
@@ -80,6 +80,15 @@ class EaselSequenceTestCase(unittest.TestCase):
     def test_reverse_complement(self):
         self.sequence.reverse_complement()
         self.assertEqual('ACGGT', self.sequence.seq)
+
+    def test_write(self):
+        self.sequence.description = 'the description'
+        with tempfile.TemporaryFile() as tf:
+            self.sequence.write(tf)
+            tf.seek(0)
+            result = tf.read()
+
+        self.assertEqual('>test the description\nACCGT\n', result)
 
 def suite():
     s = unittest.TestSuite()

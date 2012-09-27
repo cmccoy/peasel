@@ -1,8 +1,8 @@
-.PHONY : clean inplace build clean-backupfiles clean-patchfiles clean-pyc
+.PHONY : clean inplace build clean-backupfiles clean-patchfiles clean-pyc test
 
 inplace: peasel/ceasel.so
 
-peasel/ceasel.so: peasel/easel.pyx peasel/ceasel.pxd
+peasel/ceasel.so: peasel/ceasel.pyx
 	python setup.py build_ext --inplace
 
 build:
@@ -26,3 +26,6 @@ clean-patchfiles:
 clean-backupfiles:
 	find . -name '*~' -exec rm -f {} +
 	find . -name '*.bak' -exec rm -f {} +
+
+test:
+	python setup.py test
