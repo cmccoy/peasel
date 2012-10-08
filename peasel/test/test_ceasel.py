@@ -90,10 +90,21 @@ class EaselSequenceTestCase(unittest.TestCase):
 
         self.assertEqual('>test the description\nACCGT\n', result)
 
+class WriteFastaTestCase(unittest.TestCase):
+
+    def setUp(self):
+        self.sequence = ceasel.EaselSequence.create('test', 'ACCGT', '', '')
+
+    def test_write(self):
+        with tempfile.NamedTemporaryFile(prefix='ceasel') as fp:
+            ceasel.write_fasta([self.sequence], fp)
+
+
 def suite():
     s = unittest.TestSuite()
     test_classes = [CreateSSITestCase, EaselSequenceTestCase,
-            EaselSequenceIndexTestCase]
+            EaselSequenceIndexTestCase,
+            WriteFastaTestCase]
 
     for cls in test_classes:
         s.addTests(unittest.makeSuite(cls))

@@ -2,16 +2,18 @@
 C interface to Easel
 """
 
+from libc cimport stdio
+
 __all__ = ['read_seq_file', 'create_ssi', 'open_ssi',
         'FMT_FASTA', 'write_fasta']
 
-# Definitions
-cdef extern from "Python.h":
-    FILE* PyFile_AsFile(object)
-    void  fprintf(FILE* f, char* s, char* s)
-cdef extern from "fileobject.h":
+cdef extern from "fileobject.h": 
     ctypedef class __builtin__.file [object PyFileObject]:
         pass
+    cdef stdio.FILE *PyFile_AsFile(object) except NULL
+    cdef int PyFile_Check(object o)
+    cdef void PyFile_IncUseCount(file p)
+    cdef void PyFile_DecUseCount(file p)
 
 cdef extern from "unistd.h":
     ctypedef unsigned off_t
@@ -167,13 +169,26 @@ cdef class EaselSequence:
     def __len__(self):
         return self._sq.n
 
-    def write(self, file f):
+    def write(self, fp):
         """
         Write the sequence to open file handle f, in FASTA format
         """
-        r = esl_sqio_Write(PyFile_AsFile(f), self._sq, SQFILE_FASTA, 0)
-        if r != eslOK:
-            raise EaselError("Write failed with {0}".format(r))
+        fp.write('>' + self.name)
+        if self.description:
+            fp.write(' ' + self.description)
+        fp.write('\n')
+        fp.write(self.seq)
+        fp.write('\n')
+
+        #if not PyFile_Check(f):
+            #raise TypeError("invalid file object: %s" % f)
+        #cdef stdio.FILE *fp = PyFile_AsFile(f)
+        ##PyFile_IncUseCount(f)
+        #r = esl_sqio_Write(fp, self._sq, SQFILE_FASTA, 0)
+        ##PyFile_DecUseCount(f)
+
+        #if r != eslOK:
+            #raise EaselError("Write failed with {0}".format(r))
 
     def reverse_complement(self):
         """
@@ -352,7 +367,7 @@ def create_ssi(bytes file_path, bytes ssi_name=None, int sq_format=SQFILE_UNKNOW
 
     return count
 
-def write_fasta(sequences not None, file fp not None):
+def write_fasta(sequences not None, fp not None):
     """
     Writes `sequences` to the open file handle fp
     """
