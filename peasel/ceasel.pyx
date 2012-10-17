@@ -7,14 +7,6 @@ from libc cimport stdio
 __all__ = ['read_seq_file', 'create_ssi', 'open_ssi',
         'FMT_FASTA', 'write_fasta']
 
-cdef extern from "fileobject.h": 
-    ctypedef class __builtin__.file [object PyFileObject]:
-        pass
-    cdef stdio.FILE *PyFile_AsFile(object) except NULL
-    cdef int PyFile_Check(object o)
-    cdef void PyFile_IncUseCount(file p)
-    cdef void PyFile_DecUseCount(file p)
-
 cdef extern from "unistd.h":
     ctypedef unsigned off_t
 
@@ -72,7 +64,8 @@ cdef extern from "esl_sqio.h":
         int format
         ESL_SQDATA data
 
-    int esl_sqfile_Open(char *seqfile, int fmt, char *env, ESL_SQFILE **ret_sqfp)
+    int esl_sqfile_Open(char *seqfile, int fmt, char *env,
+            ESL_SQFILE **ret_sqfp)
     int esl_sqfile_OpenSSI(ESL_SQFILE *sqfp, char *ssifile_hint)
     int esl_sqfile_PositionByKey(ESL_SQFILE *sqfp, char *key)
     void esl_sqfile_Close(ESL_SQFILE *sqfp)
@@ -90,9 +83,12 @@ cdef extern from "esl_ssi.h":
         FILE *ssifp
 
     # Creating
-    int esl_newssi_Open(char *ssifile, int allow_overwrite, ESL_NEWSSI **ret_newssi)
-    int esl_newssi_AddFile(ESL_NEWSSI *ns, char *filename, int fmt, uint16_t* ret_fh)
-    int esl_newssi_AddKey(ESL_NEWSSI *ns, char *key, int fh, int r_off, int d_off, long L)
+    int esl_newssi_Open(char *ssifile, int allow_overwrite,
+            ESL_NEWSSI **ret_newssi)
+    int esl_newssi_AddFile(ESL_NEWSSI *ns, char *filename, int fmt,
+            uint16_t* ret_fh)
+    int esl_newssi_AddKey(ESL_NEWSSI *ns, char *key, int fh, int r_off,
+            int d_off, long L)
     int esl_newssi_Write(ESL_NEWSSI *ns)
     void esl_newssi_Close(ESL_NEWSSI *ns)
 
@@ -135,6 +131,9 @@ FMT_FASTA = SQFILE_FASTA
 FMT_GENBANK = SQFILE_GENBANK
 
 class EaselError(ValueError):
+    pass
+
+class EaselMissingIndexError(IOError):
     pass
 
 cdef class EaselSequence:
@@ -222,18 +221,22 @@ cdef class EaselSequence:
 
         seq = self._sq.seq
         seq = seq[s]
-        return create_easel_sequence(esl_sq_CreateFrom(self._sq.name, seq, self._sq.acc, self._sq.desc, NULL))
+        return create_easel_sequence(
+                esl_sq_CreateFrom(
+                    self._sq.name, seq, self._sq.acc, self._sq.desc, NULL))
 
     @classmethod
     def create(cls, bytes name, bytes seq, bytes acc, bytes desc):
-        return create_easel_sequence(esl_sq_CreateFrom(name, seq, acc, desc, NULL))
+        return create_easel_sequence(
+                esl_sq_CreateFrom(name, seq, acc, desc, NULL))
 
 cdef create_easel_sequence(ESL_SQ *_sq):
     s = EaselSequence()
     s._sq = _sq
     return s
 
-cdef ESL_SQFILE* open_sequence_file(bytes path, int sq_format=SQFILE_UNKNOWN) except NULL:
+cdef ESL_SQFILE* open_sequence_file(bytes path,
+        int sq_format=SQFILE_UNKNOWN) except NULL:
     cdef ESL_SQFILE *sq_fp = NULL
     cdef int status
     status = esl_sqfile_Open(path, 1, NULL, &sq_fp)
@@ -287,11 +290,15 @@ cdef class EaselSequenceIndex:
 
         status = esl_sqfile_PositionByKey(self._sq_fp, key)
         if status == eslENOTFOUND:
-            raise KeyError("Sequence {0} not found in index for file {1}".format(key, self.file_path))
+            raise KeyError(("Sequence {0} not found in index for "
+                "file {1}").format(key, self.file_path))
         elif status == eslEFORMAT:
-            raise IOError("Failed to parse SSI index for {0}".format(self.file_path))
+            raise IOError(
+                    "Failed to parse SSI index for {0}".format(self.file_path))
         elif status != eslOK:
-            raise IOError("Failed to look up {0} in {1} [{2}]".format(key, self.file_path, status))
+            raise IOError(
+                    "Failed to look up {0} in {1} [{2}]".format(
+                        key, self.file_path, status))
 
         sq = read_sequence(self._sq_fp)
         return create_easel_sequence(sq)
@@ -311,12 +318,14 @@ def open_ssi(bytes file_path, int sq_format=SQFILE_UNKNOWN):
     _open_ssi(obj._sq_fp)
 
     if obj._sq_fp.data.ascii.ssi is NULL:
-        raise IOError("no index exists for {0}".format(file_path))
+        raise EaselMissingIndexError(
+                "no index exists for {0}".format(file_path))
 
     return obj
 
 
-def create_ssi(bytes file_path, bytes ssi_name=None, int sq_format=SQFILE_UNKNOWN):
+def create_ssi(bytes file_path, bytes ssi_name=None,
+        int sq_format=SQFILE_UNKNOWN):
     """
     Create a Simple Sequence Index for a file.
     """
@@ -349,15 +358,16 @@ def create_ssi(bytes file_path, bytes ssi_name=None, int sq_format=SQFILE_UNKNOW
         status = esl_sqio_ReadInfo(sq_fp, sq)
         while status == eslOK:
             count += 1
-            if esl_newssi_AddKey(ssi, sq.name, fh, sq.roff, sq.doff, sq.L) != eslOK:
-                raise EaselError("unable to add %s to index", sq.name)
+            if esl_newssi_AddKey(
+                    ssi, sq.name, fh, sq.roff, sq.doff, sq.L) != eslOK:
+                raise EaselError("unable to add {0} to index".format(sq.name))
             esl_sq_Reuse(sq)
             status = esl_sqio_ReadInfo(sq_fp, sq)
         if status == eslEFORMAT:
             raise IOError("Failed parsing.")
         elif status != eslEOF:
-            raise IOError(
-                    "Unexpected error {0} reading sequence file".format(status))
+            raise IOError(("Unexpected error {0} reading sequence "
+                "file").format(status))
 
         esl_newssi_Write(ssi)
     finally:
