@@ -36,5 +36,5 @@ setup(
     name='peasel',
     packages=['peasel', 'peasel.test'],
     test_suite='peasel.test.suite',
-    version='0.1.0',
+    version='0.1.1',
     **extra)
