@@ -6,6 +6,28 @@ At present, it's just a Python API to the Simple Sequence Index (SSI) format.
 
 Requires [Cython](http://www.cython.org/) for development.
 
+# Usage
+
+## Create an index file
+
+Use `peasel.create_ssi` to build a sequence index:
+
+    >>> import peasel
+    >>> peasel.create_ssi('my_big_sequence_file.fasta') # creates my_big_sequence_file.fasta.ssi
+    2                                                   # Number of sequences indexed
+
+## Retrieving sequences from an index
+
+Sequence-indexes support dict-like behavior:
+
+    >>> import peasel
+    >>> # Open the index
+    >>> index = peasel.open_ssi('my_big_sequence_file.fasta')
+    >>> seq = index['sequence1']
+    >>> seq
+    <peasel.ceasel.EaselSequence object at 0x7f7c59558150>
+
+
 # License
 
 Distributed under the GPLv3
