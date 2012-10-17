@@ -5,7 +5,7 @@ C interface to Easel
 from libc cimport stdio
 
 __all__ = ['read_seq_file', 'create_ssi', 'open_ssi',
-        'FMT_FASTA', 'write_fasta']
+        'FMT_FASTA', 'write_fasta', 'EaselSequence']
 
 cdef extern from "unistd.h":
     ctypedef unsigned off_t
