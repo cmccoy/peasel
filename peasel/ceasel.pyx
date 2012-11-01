@@ -4,8 +4,12 @@ C interface to Easel
 
 from libc cimport stdio
 
+import os
+import contextlib
+import tempfile
+
 __all__ = ['read_seq_file', 'create_ssi', 'open_ssi',
-        'FMT_FASTA', 'write_fasta', 'EaselSequence']
+        'temp_ssi', 'FMT_FASTA', 'write_fasta', 'EaselSequence']
 
 cdef extern from "unistd.h":
     ctypedef unsigned off_t
@@ -179,16 +183,6 @@ cdef class EaselSequence:
         fp.write(self.seq)
         fp.write('\n')
 
-        #if not PyFile_Check(f):
-            #raise TypeError("invalid file object: %s" % f)
-        #cdef stdio.FILE *fp = PyFile_AsFile(f)
-        ##PyFile_IncUseCount(f)
-        #r = esl_sqio_Write(fp, self._sq, SQFILE_FASTA, 0)
-        ##PyFile_DecUseCount(f)
-
-        #if r != eslOK:
-            #raise EaselError("Write failed with {0}".format(r))
-
     def reverse_complement(self):
         """
         Reverse complements the sequence, in place
@@ -246,9 +240,8 @@ cdef ESL_SQFILE* open_sequence_file(bytes path,
         raise IOError("Failed to create: {0}".format(status))
     return sq_fp
 
-cdef int _open_ssi(ESL_SQFILE* sqfp) except -1:
-    cdef int status
-    status = esl_sqfile_OpenSSI(sqfp, NULL)
+cdef int _open_ssi(ESL_SQFILE* sqfp, char* ssi_hint=NULL) except -1:
+    cdef int status = esl_sqfile_OpenSSI(sqfp, ssi_hint)
     if status == eslENOTFOUND:
         raise IOError("SSI Index Not found.")
     if status == eslEFORMAT:
@@ -307,15 +300,27 @@ cdef class EaselSequenceIndex:
         if self._sq_fp is not NULL:
             esl_sqfile_Close(self._sq_fp)
 
-def open_ssi(bytes file_path, int sq_format=SQFILE_UNKNOWN):
+def open_ssi(bytes file_path, bytes ssi_path=None, int sq_format=SQFILE_UNKNOWN):
     """
     Open a simple sequence index for a file.
+
+    :param file_path: Path to the sequence file
+    :param ssi_path: Path to the sequence SSI file. If not given, ``.ssi`` is
+            appended to ``file_path``.
+    :param sq_format: File format.
     """
     obj = EaselSequenceIndex()
     obj.file_path = file_path
     obj.sq_format = sq_format
+
     obj._sq_fp = open_sequence_file(file_path, sq_format)
-    _open_ssi(obj._sq_fp)
+
+    # Set SSI path
+    cdef char* cssi_path = NULL
+    if ssi_path is not None:
+        cssi_path = ssi_path
+
+    _open_ssi(obj._sq_fp, cssi_path)
 
     if obj._sq_fp.data.ascii.ssi is NULL:
         raise EaselMissingIndexError(
@@ -328,6 +333,10 @@ def create_ssi(bytes file_path, bytes ssi_name=None,
         int sq_format=SQFILE_UNKNOWN):
     """
     Create a Simple Sequence Index for a file.
+    :param file_path: Path to the sequence file
+    :param ssi_path: Path to the sequence SSI file. If not given, ``.ssi`` is
+            appended to ``file_path``.
+    :param sq_format: File format.
     """
     cdef ESL_NEWSSI *ssi
     cdef ESL_SQFILE *sq_fp = NULL
@@ -386,3 +395,29 @@ def write_fasta(sequences not None, fp not None):
         count += 1
         sequence.write(fp)
     return count
+
+@contextlib.contextmanager
+def temp_ssi(file_path, sq_format=SQFILE_UNKNOWN, **kwargs):
+    """
+    Context manager.
+
+    Create a temporary sequence index for the duration of the context manager.
+
+
+    :param file_path: Path to sequence file
+    :param sq_format:
+    :param kwargs: Additional arguments ot pass to ``tempfile.NamedTemporaryFile``
+    :returns: Yields an instance of :class:`EaselSequenceIndex`
+    """
+    kwargs['delete'] = True
+    if 'prefix' not in kwargs:
+        kwargs['prefix'] = 'peasel-'
+    if 'suffix' not in kwargs:
+        kwargs['suffix'] = '.ssi'
+    with tempfile.NamedTemporaryFile(**kwargs) as tf:
+        tf.close()
+        try:
+            create_ssi(file_path, tf.name, sq_format)
+            yield open_ssi(file_path, tf.name, sq_format)
+        finally:
+            os.unlink(tf.name)

@@ -57,6 +57,11 @@ class EaselSequenceIndexTestCase(SequenceFileMixIn, unittest.TestCase):
         index = ceasel.open_ssi(self.file_path)
         self.assertRaises(KeyError, index.__getitem__, 'sequence3')
 
+    def test_temp_ssi(self):
+        with ceasel.temp_ssi(self.file_path) as ssi:
+            seq2 = ssi['sequence2']
+            self.assertTrue(seq2 is not None)
+
 class EaselSequenceTestCase(unittest.TestCase):
 
     def setUp(self):
@@ -98,7 +103,6 @@ class WriteFastaTestCase(unittest.TestCase):
     def test_write(self):
         with tempfile.NamedTemporaryFile(prefix='ceasel') as fp:
             ceasel.write_fasta([self.sequence], fp)
-
 
 def suite():
     s = unittest.TestSuite()
