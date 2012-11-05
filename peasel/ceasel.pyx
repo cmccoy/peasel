@@ -296,6 +296,12 @@ cdef class EaselSequenceIndex:
         sq = read_sequence(self._sq_fp)
         return create_easel_sequence(sq)
 
+    def get(self, key, default=None):
+        try:
+            return self[key]
+        except KeyError:
+            return default
+
     def __dealloc__(self):
         if self._sq_fp is not NULL:
             esl_sqfile_Close(self._sq_fp)
