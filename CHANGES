@@ -2,6 +2,7 @@
 ---------
 
 Support for specifying SSI path
+Add `.get` method to EaselSequenceIndex
 
 0.1.1
 -----
