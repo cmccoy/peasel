@@ -313,6 +313,9 @@ cdef class EaselSequenceIndex:
         if self._sq_fp is not NULL:
             esl_sqfile_Close(self._sq_fp)
 
+    def __repr__(self):
+        return '<EaselSequenceIndex 0x%x [path="%s"]>' % (id(self), self.file_path)
+
 def open_ssi(bytes file_path, bytes ssi_path=None, int sq_format=SQFILE_UNKNOWN):
     """
     Open a simple sequence index for a file.

@@ -3,6 +3,7 @@
 
 Support for specifying SSI path
 Add `.get` method to EaselSequenceIndex
+Add `__repr__` method to EaselSequence, EaselSequenceIndex
 
 0.1.1
 -----
