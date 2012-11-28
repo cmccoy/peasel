@@ -2,6 +2,13 @@ language: python
 python:
   - "2.7"
 
+env:
+  - USE_CYTHON=yes
+  - USE_CYTHON=no
+
+before_install:
+  - if [[ $USE_CYTHON == "yes" ]]; then pip install --use-mirrors -q cython; fi
+
 script: python setup.py test
 
 notifications:
