@@ -2,6 +2,7 @@ include peasel/*.pyx
 include peasel/*.pxd
 include easel-src/*.h
 include easel-src/*.c
+include setup.cfg
 
 global-exclude *.so
 global-exclude *.pyd
