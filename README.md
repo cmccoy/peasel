@@ -7,9 +7,23 @@ for rapid sequence retrieval from large files.
 
 # Installation
 
-`peasel` requires [Python 2.7](http://www.python.org/) and a working C compiler.
+`peasel` requires [Python 2.7](http://www.python.org/), either
+[setuptools](http://pypi.python.org/pypi/setuptools) or
+[distribute](http://pypi.python.org/pypi/distribute) and a working C compiler.
 
 Development requires [Cython](http://www.cython.org/), tested with version 0.17.
+
+To install:
+
+```sh
+python setup.py install
+```
+
+To run the unit tests:
+
+```sh
+python setup.py test
+```
 
 # Usage
 

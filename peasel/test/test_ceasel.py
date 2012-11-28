@@ -3,6 +3,7 @@ import tempfile
 import os
 import os.path
 
+import peasel
 from peasel import ceasel
 
 
@@ -58,7 +59,7 @@ class EaselSequenceIndexTestCase(SequenceFileMixIn, unittest.TestCase):
         self.assertRaises(KeyError, index.__getitem__, 'sequence3')
 
     def test_temp_ssi(self):
-        with ceasel.temp_ssi(self.file_path) as ssi:
+        with peasel.temp_ssi(self.file_path) as ssi:
             seq2 = ssi['sequence2']
             self.assertTrue(seq2 is not None)
 

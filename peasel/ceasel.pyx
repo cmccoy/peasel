@@ -4,12 +4,8 @@ C interface to Easel
 
 from libc cimport stdio
 
-import os
-import contextlib
-import tempfile
-
-__all__ = ['read_seq_file', 'create_ssi', 'open_ssi',
-        'temp_ssi', 'FMT_FASTA', 'write_fasta', 'EaselSequence']
+__all__ = ['read_seq_file', 'create_ssi', 'open_ssi', 'FMT_UNKNOWN',
+           'FMT_FASTA', 'write_fasta', 'EaselSequence']
 
 cdef extern from "unistd.h":
     ctypedef unsigned off_t
@@ -133,6 +129,7 @@ cdef int SQFILE_NCBI = 6
 # BEGIN IMPLEMENTATION
 FMT_FASTA = SQFILE_FASTA
 FMT_GENBANK = SQFILE_GENBANK
+FMT_UNKNOWN = SQFILE_UNKNOWN
 
 class EaselError(ValueError):
     pass
@@ -225,6 +222,9 @@ cdef class EaselSequence:
 
     @classmethod
     def create(cls, bytes name, bytes seq, bytes acc, bytes desc):
+        """
+        Create a sequence
+        """
         return create_easel_sequence(
                 esl_sq_CreateFrom(name, seq, acc, desc, NULL))
 
@@ -278,6 +278,9 @@ def read_seq_file(bytes path, int sq_format=SQFILE_UNKNOWN):
 
 
 cdef class EaselSequenceIndex:
+    """
+    An open sequence index. Supports dict-like sequence lookups by name.
+    """
     cdef ESL_SQFILE *_sq_fp
     cdef bytes file_path
     cdef int sq_format
@@ -405,29 +408,3 @@ def write_fasta(sequences not None, fp not None):
         count += 1
         sequence.write(fp)
     return count
-
-@contextlib.contextmanager
-def temp_ssi(file_path, sq_format=SQFILE_UNKNOWN, **kwargs):
-    """
-    Context manager.
-
-    Create a temporary sequence index for the duration of the context manager.
-
-
-    :param file_path: Path to sequence file
-    :param sq_format:
-    :param kwargs: Additional arguments ot pass to ``tempfile.NamedTemporaryFile``
-    :returns: Yields an instance of :class:`EaselSequenceIndex`
-    """
-    kwargs['delete'] = True
-    if 'prefix' not in kwargs:
-        kwargs['prefix'] = 'peasel-'
-    if 'suffix' not in kwargs:
-        kwargs['suffix'] = '.ssi'
-    with tempfile.NamedTemporaryFile(**kwargs) as tf:
-        tf.close()
-        try:
-            create_ssi(file_path, tf.name, sq_format)
-            yield open_ssi(file_path, tf.name, sq_format)
-        finally:
-            os.unlink(tf.name)
