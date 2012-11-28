@@ -20,15 +20,18 @@ Use `peasel.create_ssi` to build a sequence index:
 
 ## Retrieving sequences from an index
 
-Sequence-indexes support dict-like behavior:
+Sequence-indexes support `dict`-like behavior:
 
 ```python
 >>> import peasel
 >>> # Open the index
 >>> index = peasel.open_ssi('my_big_sequence_file.fasta')
->>> seq = index['sequence1']
->>> seq
-<peasel.ceasel.EaselSequence object at 0x7f7c59558150>
+>>> index['sequence1']
+<EaselSequence 0x7f38735b80f0 [name="sequence1";description="";length=5]>
+>>> index.get('sequence1')
+<EaselSequence 0x7f38735b8108 [name="sequence1";description="";length=5]>
+>>> print index.get('missing_sequence')
+None
 ```
 
 

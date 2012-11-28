@@ -95,6 +95,11 @@ class EaselSequenceTestCase(unittest.TestCase):
 
         self.assertEqual('>test the description\nACCGT\n', result)
 
+    def test_repr(self):
+        result = repr(self.sequence)
+        self.assertRegexpMatches(result,
+                r'\<EaselSequence 0x[a-f0-9]+ \[name="test";description="";length=5\]\>')
+
 class WriteFastaTestCase(unittest.TestCase):
 
     def setUp(self):

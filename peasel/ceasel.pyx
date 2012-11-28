@@ -219,6 +219,10 @@ cdef class EaselSequence:
                 esl_sq_CreateFrom(
                     self._sq.name, seq, self._sq.acc, self._sq.desc, NULL))
 
+    def __repr__(self):
+        return '<EaselSequence 0x%x [name="%s";description="%s";length=%d]>' \
+                % (id(self), self.name, self.description, len(self))
+
     @classmethod
     def create(cls, bytes name, bytes seq, bytes acc, bytes desc):
         return create_easel_sequence(
