@@ -8,7 +8,9 @@ except ImportError:
     has_cython = False
 
 compile_args = ['-std=gnu99', '-O3', '-fomit-frame-pointer',
-                '-malign-double', '-fstrict-aliasing', '-msse2']
+                '-malign-double', '-fstrict-aliasing', '-msse2',
+                # Suppress some easel warnings
+                '-Wno-unused-but-set-variable', '-Wno-uninitialized', '-Wno-parentheses']
 
 easel_c_src = [ 'easel.c', 'esl_alphabet.c', 'esl_sqio.c', 'esl_sqio_ascii.c',
 'esl_sq.c', 'esl_msa.c', 'esl_sqio_ncbi.c', 'esl_wuss.c', 'esl_keyhash.c',
@@ -36,5 +38,5 @@ setup(
     name='peasel',
     packages=['peasel', 'peasel.test'],
     test_suite='peasel.test.suite',
-    version='0.1.1',
+    version='0.2.0',
     **extra)

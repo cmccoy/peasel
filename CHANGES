@@ -1,8 +1,9 @@
-0.2.0-dev
----------
+0.2.0
+-----
 
 Support for specifying SSI path
 Add `.get` method to EaselSequenceIndex
+Suppress warnings from Easel compilation
 Add `__repr__` method to EaselSequence, EaselSequenceIndex
 
 0.1.1
