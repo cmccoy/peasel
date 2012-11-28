@@ -1,10 +1,15 @@
-# `peasely`
+# `peasel`
 
-Some wrappers for a little bit of  [Sean Eddy](http://selab.janelia.org/)'s excellent [Easel](http://selab.janelia.org/people/eddys/blog/?p=394) library for sequence manipulation.
+Some python wrappers for a little bit of  [Sean Eddy](http://selab.janelia.org/)'s excellent [Easel](http://selab.janelia.org/people/eddys/blog/?p=394) library for sequence manipulation.
 
-At present, it's just a Python API to the Simple Sequence Index (SSI) format.
+At present, it's just a Python API to the Simple Sequence Index (SSI) format
+for rapid sequence retrieval from large files.
 
-Requires [Cython](http://www.cython.org/) for development.
+# Installation
+
+`peasel` requires [Python 2.7](http://www.python.org/) and a working C compiler.
+
+Development requires [Cython](http://www.cython.org/), tested with version 0.17.
 
 # Usage
 
@@ -34,7 +39,19 @@ Sequence-indexes support `dict`-like behavior:
 None
 ```
 
+## Using a temporary index
+
+If you'd prefer not to litter the filesystem with `.ssi` files, use the `temp_ssi` context manager:
+
+```python
+>>> import peasel
+>>> with peasel.temp_ssi('my_big_sequence_file.fasta') as index:
+...     index['sequence1']
+...
+<EaselSequence 0x7ff15065a0f0 [name="sequence1";description="";length=5]>
+```
 
 # License
 
-Distributed under the GPLv3
+Distributed under the GPLv3. Easel source code is distributed under the Janelia
+Farm License, included in the `easel-src` subdirectory.
