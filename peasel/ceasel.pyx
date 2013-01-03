@@ -135,8 +135,10 @@ cdef class EaselSequence:
     """
     Wrapper for the Easel ESL_SQ object
     """
-
     cdef ESL_SQ *_sq
+
+    def __init__(self):
+        raise ValueError("This class cannot be instantiated from Python")
 
     def __dealloc__(self):
         if self._sq is not NULL:
@@ -190,11 +192,12 @@ cdef class EaselSequence:
         cdef int res
 
         cdef ESL_SQ *s = esl_sq_Create()
+        cdef EaselSequence sq
         try:
             res = esl_sq_Copy(self._sq, s)
             if res != eslOK:
                 raise EaselError("Error Copying ({0})".format(res))
-            sq = EaselSequence()
+            sq = EaselSequence.__new__(EaselSequence)
             sq._sq = s
             return sq
         except:
@@ -223,7 +226,7 @@ cdef class EaselSequence:
                 esl_sq_CreateFrom(name, seq, acc, desc, NULL))
 
 cdef create_easel_sequence(ESL_SQ *_sq):
-    s = EaselSequence()
+    cdef EaselSequence s = EaselSequence.__new__(EaselSequence)
     s._sq = _sq
     return s
 
@@ -279,6 +282,9 @@ cdef class EaselSequenceIndex:
     cdef bytes file_path
     cdef int sq_format
 
+    def __init__(self):
+        raise ValueError("This class cannot be instantiated from Python")
+
     def __getitem__(self, bytes key):
         cdef int status
 
@@ -319,7 +325,7 @@ def open_ssi(bytes file_path, bytes ssi_path=None, int sq_format=SQFILE_UNKNOWN)
             appended to ``file_path``.
     :param sq_format: File format.
     """
-    obj = EaselSequenceIndex()
+    cdef EaselSequenceIndex obj = EaselSequenceIndex.__new__(EaselSequenceIndex)
     obj.file_path = file_path
     obj.sq_format = sq_format
 
