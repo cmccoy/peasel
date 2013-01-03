@@ -2,21 +2,15 @@
 C interface to Easel
 """
 
-from libc cimport stdio
+from libc.stdio cimport FILE
+from libc.stdint cimport int64_t, uint16_t
 
 __all__ = ['read_seq_file', 'create_ssi', 'open_ssi', 'FMT_UNKNOWN',
            'FMT_FASTA', 'write_fasta', 'EaselSequence']
 
+# External declarations
 cdef extern from "unistd.h":
     ctypedef unsigned off_t
-
-cdef extern from "inttypes.h":
-    ctypedef int int64_t
-    ctypedef unsigned short uint16_t
-
-cdef extern from "stdio.h":
-    ctypedef struct FILE:
-        pass
 
 cdef extern from "easel.h":
     ctypedef int ESL_DSQ
