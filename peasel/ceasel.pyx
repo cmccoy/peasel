@@ -168,6 +168,8 @@ cdef class EaselSequence:
     def write(self, fp):
         """
         Write the sequence to open file handle f, in FASTA format
+
+        :param file fp: File-like object, open for writing.
         """
         fp.write('>' + self.name)
         if self.description:
@@ -205,6 +207,12 @@ cdef class EaselSequence:
             raise
 
     def __getitem__(self, slice s):
+        """
+        Slice the sequence
+
+        :param slice s: Slice to get, e.g. ``s[1:3]``
+        :returns: :class:`EaselSequence` sliced to the specified residues.
+        """
         cdef bytes seq
 
         seq = self._sq.seq
@@ -221,6 +229,12 @@ cdef class EaselSequence:
     def create(cls, bytes name, bytes seq, bytes acc, bytes desc):
         """
         Create a sequence
+
+        :param str name: Sequence name
+        :param str seq: Sequence residues
+        :param str acc: Sequence accession number
+        :param str desc: Sequence description
+        :returns: A new :class:`EaselSequence`
         """
         return create_easel_sequence(
                 esl_sq_CreateFrom(name, seq, acc, desc, NULL))
@@ -263,6 +277,12 @@ cdef ESL_SQ* read_sequence(ESL_SQFILE *sq_fp) except NULL:
     return sq
 
 def read_seq_file(bytes path, int sq_format=SQFILE_UNKNOWN):
+    """
+    Read sequences from ``path``. This is a generator function.
+
+    :param str path: Path to sequence file
+    :returns: Generator of EaselSequence objects.
+    """
     cdef ESL_SQFILE *sq_fp = open_sequence_file(path, sq_format)
     cdef ESL_SQ *sq = esl_sq_Create()
     try:
@@ -286,6 +306,12 @@ cdef class EaselSequenceIndex:
         raise ValueError("This class cannot be instantiated from Python")
 
     def __getitem__(self, bytes key):
+        """
+        Get a sequence from the indexed file
+
+        :param slice key: Sequence name *or* accession
+        :returns: :class:`EaselSequence` object.
+        """
         cdef int status
 
         status = esl_sqfile_PositionByKey(self._sq_fp, key)
@@ -320,9 +346,9 @@ def open_ssi(bytes file_path, bytes ssi_path=None, int sq_format=SQFILE_UNKNOWN)
     """
     Open a simple sequence index for a file.
 
-    :param file_path: Path to the sequence file
-    :param ssi_path: Path to the sequence SSI file. If not given, ``.ssi`` is
-            appended to ``file_path``.
+    :param str file_path: Path to the sequence file
+    :param str ssi_path: Path to the sequence SSI file. If not given, ``.ssi`` is
+                         appended to ``file_path``.
     :param sq_format: File format.
     """
     cdef EaselSequenceIndex obj = EaselSequenceIndex.__new__(EaselSequenceIndex)
@@ -349,9 +375,10 @@ def create_ssi(bytes file_path, bytes ssi_name=None,
         int sq_format=SQFILE_UNKNOWN):
     """
     Create a Simple Sequence Index for a file.
+
     :param file_path: Path to the sequence file
-    :param ssi_path: Path to the sequence SSI file. If not given, ``.ssi`` is
-            appended to ``file_path``.
+    :param ssi_path: Path to the sequence SSI file. If not given, ``.ssi`` is 
+                     appended to ``file_path``.
     :param sq_format: File format.
     """
     cdef ESL_NEWSSI *ssi
@@ -405,6 +432,9 @@ def create_ssi(bytes file_path, bytes ssi_name=None,
 def write_fasta(sequences not None, fp not None):
     """
     Writes `sequences` to the open file handle fp
+
+    :param sequences: Iterable of :class:`EaselSequence` objects
+    :param fp: Open file-like object
     """
     cdef int count = 0
     for sequence in sequences:
