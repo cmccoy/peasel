@@ -6,7 +6,7 @@ from libc.stdio cimport FILE
 from libc.stdint cimport int64_t, uint16_t
 
 __all__ = ['read_seq_file', 'create_ssi', 'open_ssi', 'FMT_UNKNOWN',
-           'FMT_FASTA', 'write_fasta', 'EaselSequence']
+           'FMT_FASTA', 'read_fasta', 'write_fasta', 'EaselSequence']
 
 # External declarations
 cdef extern from "unistd.h":
@@ -293,6 +293,8 @@ def read_seq_file(bytes path, int sq_format=SQFILE_UNKNOWN):
         esl_sq_Destroy(sq)
         esl_sqfile_Close(sq_fp)
 
+def read_fasta(path):
+    return read_seq_file(path, SQFILE_FASTA)
 
 cdef class EaselSequenceIndex:
     """

@@ -101,6 +101,27 @@ class EaselSequenceTestCase(unittest.TestCase):
         self.assertRegexpMatches(result,
                 r'\<EaselSequence 0x[a-f0-9]+ \[name="test";description="";length=5\]\>')
 
+class ReadFastaTestCase(unittest.TestCase):
+
+    def setUp(self):
+        with tempfile.NamedTemporaryFile(prefix='peasel-', suffix='.fasta', delete=False) as fp:
+            fp.write(""">sequence1
+ACGT
+>sequence2
+ACCT
+""")
+            self.tf = fp.name
+
+    def tearDown(self):
+        os.unlink(self.tf)
+
+    def test_read_basic(self):
+        records = list(ceasel.read_fasta(self.tf))
+        self.assertEqual(2, len(records))
+        self.assertEqual(['sequence1', 'sequence2'], [i.name for i in records])
+        self.assertEqual(['ACGT', 'ACCT'], [i.seq for i in records])
+
+
 class WriteFastaTestCase(unittest.TestCase):
 
     def setUp(self):
@@ -112,8 +133,11 @@ class WriteFastaTestCase(unittest.TestCase):
 
 def suite():
     s = unittest.TestSuite()
-    test_classes = [CreateSSITestCase, EaselSequenceTestCase,
+    test_classes = [
+            CreateSSITestCase,
+            EaselSequenceTestCase,
             EaselSequenceIndexTestCase,
+            ReadFastaTestCase,
             WriteFastaTestCase]
 
     for cls in test_classes:
