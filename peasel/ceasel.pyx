@@ -61,9 +61,9 @@ cdef extern from "esl_sqio.h":
     int esl_sqfile_Open(char *seqfile, int fmt, char *env,
             ESL_SQFILE **ret_sqfp)
     int esl_sqfile_OpenSSI(ESL_SQFILE *sqfp, char *ssifile_hint)
-    int esl_sqfile_PositionByKey(ESL_SQFILE *sqfp, char *key)
     void esl_sqfile_Close(ESL_SQFILE *sqfp)
 
+    int esl_sqio_Fetch(ESL_SQFILE *sqfp, char *key, ESL_SQ *sq)
     int esl_sqio_Read(ESL_SQFILE *sqfp, ESL_SQ *sq)
     int esl_sqio_ReadInfo(ESL_SQFILE *sqfp, ESL_SQ *sq)
     int esl_sqio_Write(FILE *fp, ESL_SQ *s, int format, int update)
@@ -313,21 +313,24 @@ cdef class EaselSequenceIndex:
         :returns: :class:`EaselSequence` object.
         """
         cdef int status
+        cdef ESL_SQ* sq = esl_sq_Create()
 
-        status = esl_sqfile_PositionByKey(self._sq_fp, key)
-        if status == eslENOTFOUND:
-            raise KeyError(("Sequence {0} not found in index for "
-                "file {1}").format(key, self.file_path))
-        elif status == eslEFORMAT:
-            raise IOError(
-                    "Failed to parse SSI index for {0}".format(self.file_path))
-        elif status != eslOK:
-            raise IOError(
-                    "Failed to look up {0} in {1} [{2}]".format(
-                        key, self.file_path, status))
-
-        sq = read_sequence(self._sq_fp)
-        return create_easel_sequence(sq)
+        try:
+            status = esl_sqio_Fetch(self._sq_fp, key, sq)
+            if status == eslENOTFOUND:
+                raise KeyError(("Sequence {0} not found in index for "
+                    "file {1}").format(key, self.file_path))
+            elif status == eslEFORMAT:
+                raise IOError(
+                        "Failed to parse SSI index for {0}".format(self.file_path))
+            elif status != eslOK:
+                raise IOError(
+                        "Failed to look up {0} in {1} [{2}]".format(
+                            key, self.file_path, status))
+            return create_easel_sequence(sq)
+        except:
+            esl_sq_Destroy(sq)
+            raise
 
     def get(self, key, default=None):
         try:
