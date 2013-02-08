@@ -1,0 +1,158 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Example Usage &mdash; peasel 0.3.0-dev documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.3.0-dev',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="peasel 0.3.0-dev documentation" href="../" />
+    <link rel="next" title="API documentation" href="../peasel/" />
+    <link rel="prev" title="Installation" href="../installation/" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex/" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../peasel/" title="API documentation"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../installation/" title="Installation"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../">peasel 0.3.0-dev documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="example-usage">
+<h1>Example Usage<a class="headerlink" href="#example-usage" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="create-an-index-file">
+<h2>Create an index file<a class="headerlink" href="#create-an-index-file" title="Permalink to this headline">¶</a></h2>
+<p>Use <tt class="docutils literal"><span class="pre">peasel.create_ssi</span></tt> to build a sequence index:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">peasel</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">peasel</span><span class="o">.</span><span class="n">create_ssi</span><span class="p">(</span><span class="s">&#39;my_big_sequence_file.fasta&#39;</span><span class="p">)</span> <span class="c"># creates my_big_sequence_file.fasta.ssi</span>
+<span class="go">2 # Number of sequences indexed</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="retrieving-sequences-from-an-index">
+<h2>Retrieving sequences from an index<a class="headerlink" href="#retrieving-sequences-from-an-index" title="Permalink to this headline">¶</a></h2>
+<p>Sequence-indexes support <tt class="docutils literal"><span class="pre">dict</span></tt>-like behavior:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">peasel</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c"># Open the index</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">index</span> <span class="o">=</span> <span class="n">peasel</span><span class="o">.</span><span class="n">open_ssi</span><span class="p">(</span><span class="s">&#39;my_big_sequence_file.fasta&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">index</span><span class="p">[</span><span class="s">&#39;sequence1&#39;</span><span class="p">]</span>
+<span class="go">&lt;EaselSequence 0x7f38735b80f0 [name=&quot;sequence1&quot;;description=&quot;&quot;;length=5]&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">index</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;sequence1&#39;</span><span class="p">)</span>
+<span class="go">&lt;EaselSequence 0x7f38735b8108 [name=&quot;sequence1&quot;;description=&quot;&quot;;length=5]&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">index</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;missing_sequence&#39;</span><span class="p">)</span>
+<span class="go">None</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="using-a-temporary-index">
+<h2>Using a temporary index<a class="headerlink" href="#using-a-temporary-index" title="Permalink to this headline">¶</a></h2>
+<p>If you&#8217;d prefer not to litter the filesystem with <tt class="docutils literal"><span class="pre">.ssi</span></tt> files, use
+the <tt class="docutils literal"><span class="pre">temp_ssi</span></tt> context manager:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">peasel</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">peasel</span><span class="o">.</span><span class="n">temp_ssi</span><span class="p">(</span><span class="s">&#39;my_big_sequence_file.fasta&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">index</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">index</span><span class="p">[</span><span class="s">&#39;sequence1&#39;</span><span class="p">]</span>
+<span class="gp">...</span>
+<span class="go">&lt;EaselSequence 0x7ff15065a0f0 [name=&quot;sequence1&quot;;description=&quot;&quot;;length=5]&gt;</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Example Usage</a><ul>
+<li><a class="reference internal" href="#create-an-index-file">Create an index file</a></li>
+<li><a class="reference internal" href="#retrieving-sequences-from-an-index">Retrieving sequences from an index</a></li>
+<li><a class="reference internal" href="#using-a-temporary-index">Using a temporary index</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../installation/"
+                        title="previous chapter">Installation</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../peasel/"
+                        title="next chapter">API documentation</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/examples.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search/" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex/" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../peasel/" title="API documentation"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../installation/" title="Installation"
+             >previous</a> |</li>
+        <li><a href="../">peasel 0.3.0-dev documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Connor McCoy.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.
+    </div>
+  </body>
+</html>

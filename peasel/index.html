@@ -1,0 +1,258 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>API documentation &mdash; peasel 0.3.0-dev documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.3.0-dev',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="peasel 0.3.0-dev documentation" href="../" />
+    <link rel="prev" title="Example Usage" href="../examples/" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex/" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex/" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../examples/" title="Example Usage"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../">peasel 0.3.0-dev documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="api-documentation">
+<h1>API documentation<a class="headerlink" href="#api-documentation" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-peasel">
+<span id="peasel-module"></span><h2><tt class="docutils literal"><span class="pre">peasel</span></tt> Module<a class="headerlink" href="#module-peasel" title="Permalink to this headline">¶</a></h2>
+<p>peasel</p>
+<dl class="class">
+<dt id="peasel.EaselSequence">
+<em class="property">class </em><tt class="descclassname">peasel.</tt><tt class="descname">EaselSequence</tt><a class="headerlink" href="#peasel.EaselSequence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrapper for the Easel ESL_SQ object</p>
+<dl class="method">
+<dt id="peasel.EaselSequence.__len__">
+<tt class="descname">__len__</tt><big>(</big><em>self</em><big>)</big><a class="headerlink" href="#peasel.EaselSequence.__len__" title="Permalink to this definition">¶</a></dt>
+<dd><p>x.__len__() &lt;==&gt; len(x)</p>
+<p>Length of the sequence</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="peasel.EaselSequence.__getitem__">
+<tt class="descname">__getitem__</tt><big>(</big><em>self</em>, <em>s</em><big>)</big><a class="headerlink" href="#peasel.EaselSequence.__getitem__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Slice the sequence</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>s</strong> (<em>slice</em>) &#8211; Slice to get, e.g. <tt class="docutils literal"><span class="pre">s[1:3]</span></tt></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><a class="reference internal" href="#peasel.EaselSequence" title="peasel.EaselSequence"><tt class="xref py py-class docutils literal"><span class="pre">EaselSequence</span></tt></a> sliced to the specified residues.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="peasel.EaselSequence.create">
+<em class="property">static </em><tt class="descname">create</tt><big>(</big><em>name</em>, <em>residues</em>, <em>accession</em>, <em>description</em><big>)</big><a class="headerlink" href="#peasel.EaselSequence.create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a sequence</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> (<em>str</em>) &#8211; Sequence name</li>
+<li><strong>seq</strong> (<em>str</em>) &#8211; Sequence residues</li>
+<li><strong>acc</strong> (<em>str</em>) &#8211; Sequence accession number</li>
+<li><strong>desc</strong> (<em>str</em>) &#8211; Sequence description</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A new <a class="reference internal" href="#peasel.EaselSequence" title="peasel.EaselSequence"><tt class="xref py py-class docutils literal"><span class="pre">EaselSequence</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="peasel.EaselSequence.name">
+<tt class="descname">name</tt><a class="headerlink" href="#peasel.EaselSequence.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sequence identifier</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="peasel.EaselSequence.seq">
+<tt class="descname">seq</tt><a class="headerlink" href="#peasel.EaselSequence.seq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sequence</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="peasel.create_ssi">
+<tt class="descclassname">peasel.</tt><tt class="descname">create_ssi</tt><big>(</big><big>)</big><a class="headerlink" href="#peasel.create_ssi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a Simple Sequence Index for a file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>file_path</strong> &#8211; Path to the sequence file</li>
+<li><strong>ssi_path</strong> &#8211; Path to the sequence SSI file. If not given, <tt class="docutils literal"><span class="pre">.ssi</span></tt> is 
+appended to <tt class="docutils literal"><span class="pre">file_path</span></tt>.</li>
+<li><strong>sq_format</strong> &#8211; File format.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="peasel.open_ssi">
+<tt class="descclassname">peasel.</tt><tt class="descname">open_ssi</tt><big>(</big><big>)</big><a class="headerlink" href="#peasel.open_ssi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Open a simple sequence index for a file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>file_path</strong> (<em>str</em>) &#8211; Path to the sequence file</li>
+<li><strong>ssi_path</strong> (<em>str</em>) &#8211; Path to the sequence SSI file. If not given, <tt class="docutils literal"><span class="pre">.ssi</span></tt> is
+appended to <tt class="docutils literal"><span class="pre">file_path</span></tt>.</li>
+<li><strong>sq_format</strong> &#8211; File format.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="peasel.read_seq_file">
+<tt class="descclassname">peasel.</tt><tt class="descname">read_seq_file</tt><big>(</big><big>)</big><a class="headerlink" href="#peasel.read_seq_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read sequences from <tt class="docutils literal"><span class="pre">path</span></tt>. This is a generator function.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>path</strong> (<em>str</em>) &#8211; Path to sequence file</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Generator of EaselSequence objects.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="peasel.write_fasta">
+<tt class="descclassname">peasel.</tt><tt class="descname">write_fasta</tt><big>(</big><big>)</big><a class="headerlink" href="#peasel.write_fasta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes <cite>sequences</cite> to the open file handle fp</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>sequences</strong> &#8211; Iterable of <a class="reference internal" href="#peasel.EaselSequence" title="peasel.EaselSequence"><tt class="xref py py-class docutils literal"><span class="pre">EaselSequence</span></tt></a> objects</li>
+<li><strong>fp</strong> &#8211; Open file-like object</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">API documentation</a><ul>
+<li><a class="reference internal" href="#module-peasel"><tt class="docutils literal"><span class="pre">peasel</span></tt> Module</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../examples/"
+                        title="previous chapter">Example Usage</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/peasel.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search/" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex/" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex/" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../examples/" title="Example Usage"
+             >previous</a> |</li>
+        <li><a href="../">peasel 0.3.0-dev documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Connor McCoy.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.
+    </div>
+  </body>
+</html>
