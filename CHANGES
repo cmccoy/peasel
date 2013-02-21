@@ -1,3 +1,6 @@
+Add `read_fasta` to root peasel namespace
+Miscelleous internal changes for performance, code cleanliness.
+
 0.2.0
 -----
 
