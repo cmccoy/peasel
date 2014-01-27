@@ -1,5 +1,5 @@
 import os.path
-from setuptools import Extension, setup
+from setuptools import Extension, setup, Distribution
 
 try:
     from Cython.Distutils import build_ext
@@ -33,10 +33,14 @@ else:
             language="c",),
         ])
 
+class BinaryDistribution(Distribution):
+    def is_pure(self):
+        return False
 
 setup(
     name='peasel',
     packages=['peasel', 'peasel.test'],
     test_suite='peasel.test.suite',
     version='0.3.0-dev',
+    distclass=BinaryDistribution,
     **extra)
