@@ -42,5 +42,8 @@ setup(
     packages=['peasel', 'peasel.test'],
     test_suite='peasel.test.suite',
     version='0.3.0-dev',
+    author='Connor McCoy',
+    author_email='cmccoy@fhcrc.org',
+    url='http://github.com/cmccoy/peasel',
     distclass=BinaryDistribution,
     **extra)
