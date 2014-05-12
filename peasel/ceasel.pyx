@@ -377,12 +377,12 @@ def open_ssi(bytes file_path, bytes ssi_path=None, int sq_format=SQFILE_UNKNOWN)
 
 
 def create_ssi(bytes file_path, bytes ssi_name=None,
-        int sq_format=SQFILE_UNKNOWN):
+               int sq_format=SQFILE_UNKNOWN):
     """
     Create a Simple Sequence Index for a file.
 
     :param file_path: Path to the sequence file
-    :param ssi_path: Path to the sequence SSI file. If not given, ``.ssi`` is 
+    :param ssi_path: Path to the sequence SSI file. If not given, ``.ssi`` is
                      appended to ``file_path``.
     :param sq_format: File format.
     """
@@ -393,7 +393,7 @@ def create_ssi(bytes file_path, bytes ssi_name=None,
     cdef uint16_t fh
 
     if ssi_name is None:
-        ssi_name = file_path + '.ssi'
+        ssi_name = file_path + b'.ssi'
 
     status = esl_newssi_Open(ssi_name, 0, &ssi);
 

@@ -1,4 +1,5 @@
 include peasel/*.pyx
+include peasel/*.c
 include peasel/*.pxd
 include easel-src/*.h
 include easel-src/*.c
