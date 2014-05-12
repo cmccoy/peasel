@@ -1,13 +1,13 @@
 /* easel/esl_config.h.  Generated from esl_config.h.in by configure.  */
 /* esl_config.h.in  [input to configure]
- * 
+ *
  * System-dependent configuration of Easel, by autoconf.
- * 
+ *
  * This file should be included in all Easel .c files before
  * anything else, because it may set #define's that control
  * behaviour of system includes and system libraries. An example
  * is large file support.
- * 
+ *
  * SVN $Id$
  * SRE, Fri Mar  3 08:03:32 2006 [St. Louis]
  */
@@ -39,7 +39,6 @@
 #define HAVE_INTTYPES_H 1
 #define HAVE_SYS_TYPES_H 1
 #define HAVE_SYS_SYSCTL_H 1
-#define HAVE_ENDIAN_H 1
 
 /* Types
  */
@@ -81,15 +80,15 @@
 
 /*****************************************************************
  * Available augmentations.
- * 
+ *
  * If you grab a single module from Easel to use it by itself,
  * leave all these #undef'd; you have no augmentations.
- * 
+ *
  * If you grab additional Easel .c files, you can enable any
  * augmentations they provide to other modules by #defining the
  * modules you have below. Alternatively, you can -D them on
  * the compile line, as in cc -DeslAUGMENT_SSI -DeslAUGMENT_MSA.
- * 
+ *
  * If you compile and install the complete Easel library, all of these
  * get #defined automatically by ./configure, plus the eslLIBRARY flag
  * which means the full library with all augmentations is
@@ -122,9 +121,9 @@
 #define eslAUGMENT_GEV
 #define eslAUGMENT_GUMBEL
 #define eslAUGMENT_HISTOGRAM
-#define eslAUGMENT_KEYHASH 
+#define eslAUGMENT_KEYHASH
 #define eslAUGMENT_MINIMIZER
-#define eslAUGMENT_MSA		
+#define eslAUGMENT_MSA
 #define eslAUGMENT_RANDOM
 #define eslAUGMENT_SSI
 #define eslAUGMENT_STATS
@@ -137,7 +136,7 @@
  * Version h3.0; March 2010
  * Copyright (C) 2010 Howard Hughes Medical Institute.
  * Other copyrights also apply. See the COPYRIGHT file for a full list.
- * 
+ *
  * Easel is distributed under the Janelia Farm Software License, a BSD
  * license. See the LICENSE file for more details.
  *****************************************************************/
