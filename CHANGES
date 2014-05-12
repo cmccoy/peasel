@@ -1,5 +1,10 @@
-Add `read_fasta` to root peasel namespace
+0.3.0
+-----
+
+Add `read_fasta` to root peasel namespace.
 Miscelleous internal changes for performance, code cleanliness.
+Improved documentation.
+Fixes for compilation using latest Cython, OSX 10.7
 
 0.2.0
 -----
