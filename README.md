@@ -16,7 +16,12 @@ Development requires [Cython](http://www.cython.org/), tested with version 0.17.
 To install:
 
 ```sh
-python setup.py install
+pip install peasel
+```
+
+Or for the cutting edge version:
+```sh
+pip install https://github.com/cmccoy/peasel/archive/master.tar.gz
 ```
 
 To run the unit tests:
