@@ -7,7 +7,6 @@ API documentation
 .. currentmodule:: peasel
 
 .. automodule:: peasel
-   :members: create_ssi, open_ssi, read_seq_file, write_fasta
 
    .. autoclass:: EaselSequence
 
@@ -26,3 +25,13 @@ API documentation
       .. attribute:: seq
 
           Sequence
+
+  .. autofunction:: create_ssi(file_path, ssi_name=None, sq_format=SQFILE_UNKNOWN)
+
+  .. autofunction:: open_ssi(file_path, ssi_path=None, sq_format=SQFILE_UNKNOWN)
+
+  .. autofunction:: read_fasta(path)
+
+  .. autofunction:: read_seq_file(path, sq_format=SQFILE_UNKNOWN)
+
+  .. autofunction:: write_fasta(sequences, fp)

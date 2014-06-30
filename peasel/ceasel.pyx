@@ -267,21 +267,12 @@ cdef int _open_ssi(ESL_SQFILE* sqfp, char* ssi_hint=NULL) except -1:
         raise IOError("Failed to create: {0}".format(status))
     return 0
 
-cdef ESL_SQ* read_sequence(ESL_SQFILE *sq_fp) except NULL:
-    cdef ESL_SQ *sq = esl_sq_Create()
-    cdef int status
-    status = esl_sqio_Read(sq_fp, sq)
-    if status != eslOK:
-        esl_sq_Destroy(sq)
-        raise IOError("Error reading sequence [{0}]".format(status))
-    return sq
-
 def read_seq_file(bytes path, int sq_format=SQFILE_UNKNOWN):
     """
     Read sequences from ``path``. This is a generator function.
 
     :param str path: Path to sequence file
-    :returns: Generator of EaselSequence objects.
+    :returns: Generator of :class:`EaselSequence` objects.
     """
     cdef ESL_SQFILE *sq_fp = open_sequence_file(path, sq_format)
     cdef ESL_SQ *sq = esl_sq_Create()
@@ -294,6 +285,12 @@ def read_seq_file(bytes path, int sq_format=SQFILE_UNKNOWN):
         esl_sqfile_Close(sq_fp)
 
 def read_fasta(path):
+    """
+    Read sequences in FASTA format from a file.
+
+    :param str path: Path to file containing sequences in FASTA format.
+    :returns: A generator of :class:`EaselSequence` objects.
+    """
     return read_seq_file(path, SQFILE_FASTA)
 
 cdef class EaselSequenceIndex:
