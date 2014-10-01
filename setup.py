@@ -45,5 +45,6 @@ setup(
     author='Connor McCoy',
     author_email='cmccoy@fhcrc.org',
     url='http://github.com/cmccoy/peasel',
+    description='Python wrappers for (a tiny bit of) the Easel sequence library',
     distclass=BinaryDistribution,
     **extra)
