@@ -8,7 +8,7 @@ import tempfile
 
 from .ceasel import *
 
-__version__ = '0.3.1'
+__version__ = '0.4.0-dev'
 
 @contextlib.contextmanager
 def temp_ssi(file_path, sq_format=FMT_UNKNOWN, **kwargs):
