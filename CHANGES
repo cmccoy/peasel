@@ -19,6 +19,10 @@ Add `.get` method to EaselSequenceIndex
 Suppress warnings from Easel compilation
 Add `__repr__` method to EaselSequence, EaselSequenceIndex
 
+0.1.2
+-----
+Retroactive tag to ease a Deenurp dependency
+
 0.1.1
 -----
 Fix bug in `peasel.write_fasta`
